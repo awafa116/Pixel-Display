@@ -50,18 +50,177 @@ I then carved some grooves on the four sides to hold the glass panel
 
 
 
+## Coding  
+
+**content:**  
+- [controlling via remote](#how-it-is-being-controlled)
+- [animating](#animating)  
+- [single color](#single-color)  
+- [custom art](#custom-art)
+
+### How it is being controlled
+I used the IR reciever with the arduino to read the serial number that each button on the remote control sends (usint the IRremote library). then using if statments, I became able to call different functions depending on which button was pressed. 
+```
+// if the remote was pressed:
+if (irrecv.decode(&results)) {
+    // turn on and off    
+    if(results.value == 16712445){
+      toggleOff();
+    }
+    // DIY 1
+    else if (!isOff && results.value == 16724175){
+      drawHeart(30);
+    }
+    // DIY 2
+    else if (!isOff && results.value == 16756815){
+      drawSmile(30);
+    }
+    // DIY 3
+    else if (!isOff && results.value == 16740495){
+      drawBox(30);
+    }
+    // DIY 4
+    else if (!isOff && results.value == 16716015){
+      drawNinja(30);
+    }
+    // DIY 5
+    else if (!isOff && results.value == 16748655){
+      drawFace(30);
+    }
+    // DIY 6
+    else if (!isOff && results.value == 16732335){
+      drawChart(30);
+    }
+}
+```
 
 
+### Animating
+
+first of all, I started by fixing a small issue i made while building the led grid. when I bult it, the flow of the LEDs was animating vertically, although I wanted it to animate HORIZONTALLY.  
+so I made a function to assign every two LEDs to one pixel (every pixel in my display contains two LED units), and giving them a new order (to animate horizontally).
+
+<img src="https://user-images.githubusercontent.com/99819306/173862421-fde6adf3-33ac-4181-bec1-343d8ec1d25c.jpg" alt="drawing" style="width:800px;"/>
+
+and this was done using this function that takes the number of pixel as a parameter, then returns the associated LED indexes of that pixel:
+```
+int pixelNumbers(int pixel){
+  switch (pixel){
+    case 1:
+      return 1;
+      break;
+    case 2:
+      return 27;
+      break;    
+    case 3:
+      return 29;
+      break;
+    case 4:
+      return 55;
+      break;
+    case 5:
+      return 57;
+      break;
+    case 6:
+      return 83;
+      break;
+      
+    // and so on and so forth...
+    
+  }
+}
+```
+this way, I could animate the strip in the new order, and using arduinos `delay()` function, I can make the animation move in different speeds.  
+**NOTE:** I would use this function in a for loop, and then increment the returned value by one to turn on the second LED of the pixel as well.
+
+now that we have a new order, we need to use it to animate the strip on. using for loops and the `Adafruit_NeoPixel` library, I was able to do just that.
+```
+// animating the strip ON
+for(int i=1; i<=(strip.numPixels()/2); i++){
+    // turning both LEDs of the pixel ON
+    for(int j=0; j<2; j++){
+      strip.setPixelColor(pixelNumbers(i)+j, color);
+    }
+    strip.show();
+    delay(wait);
+  }
+```
 
 
+### single color 
+
+To set the strip to certain color when a button is pressed, I wrote a function that takes one parameter (the reading of the IR receiver of the pressed button), then returns the color associated with that button:
+```
+uint32_t getColor(int button){
+   
+  switch(button){
+    //Red1    
+    case 16718565:
+      return strip.Color(255,000,000);
+      break;
+    //Red2
+    case 16722645:
+      return strip.Color(255,105,000);
+      break;
+    //Red3
+    case 16714485:
+      return strip.Color(255,145,000);
+      break;
+    //Red4
+    case 16726215:
+      return strip.Color(255,185,000);
+      break;
+    //Red5
+    case 16718055:
+      return strip.Color(255,255,000);
+      break;
+      
+    // and so on and so forth...
+
+  }
+}
+```
+<img src="https://user-images.githubusercontent.com/99819306/173851597-4303fab5-e44e-4729-b68f-d5d634f6cb49.jpg" alt="drawing" style="width:800px;"/>
+
+this way I can use this function to set colors instead of hard coding the entire thing.
 
 
-## Coding
+### custom art
 
+to draw custom shapes on the display, I could've used a for loop for every group of adjacent pixels which have the same color, but that would've took ton of lines to write. Instead, I declared the colors in variables, then created an array that holds the color of each pixel in order using these variables. this way I can use this array with a for loop to set the desirable color for each pixel.
+```
+void drawMain(int wait){
+  uint32_t a = strip.Color(255,255,255); //White
+  uint32_t b = strip.Color(5,5,5); //Black
+  uint32_t arr[] = {a,a,a,a,a,a,a,a,b,a,b,a,b,a,a,b,a,b,a,a,a,a,b,a,b,b,b,a,a,b,a,b,a,b,a,a,b,a,b,a,b,a,a,a,a,a,a,a,a};
 
+  draw(arr, 30);
 
+  isOff = false;
+}
 
-
+void draw(uint32_t arr[], int wait){
+  for(int i=1; i<=(strip.numPixels()/2); i++){
+    for(int j=0; j<2; j++){
+      strip.setPixelColor(pixelNumbers(i)+j, arr[i]);
+    }
+    strip.show();
+    delay(wait);
+  }
+}
+```
 
 
 ## The Final Product
+Finally, the product's *finished*, and here it is...  
+
+custom art:
+![rgb (2)](https://user-images.githubusercontent.com/99819306/173871004-bafeb238-ca9f-444c-b216-46f495909020.jpg)  
+![custom-gif](https://user-images.githubusercontent.com/99819306/173875043-9c25e228-a3fa-4226-ab17-c96cfe3ad697.gif)
+
+solid colors:
+![rgbb (1)](https://user-images.githubusercontent.com/99819306/173871045-01f1c700-a0d8-44ab-892b-e3adfffb63d0.jpg)  
+![rgb-gif](https://user-images.githubusercontent.com/99819306/173874370-5bd98974-47ac-424b-9025-b1a2dd3b9a34.gif)  
+
+
+
