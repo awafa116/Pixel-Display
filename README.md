@@ -20,37 +20,33 @@ Here is how I made it .
 I cut 7 strips with 14 LED units on each of them (every pixel will have two LEDs).  
 Then I cut a square foam board then stuck the 7 LED strips on it with equal gaps between them.
 Then I started measuring the horizontal and vertical gaps, then I devided them to produce 49 equal squares (7x7), then I started to hot glue foam board parriers to seperate the pixels from each others.  
-
-![grid (1)](https://user-images.githubusercontent.com/99819306/173791151-d4538780-d496-4b7d-90f2-af8453fd713f.jpg)  
-  
+ 
+<img src="https://user-images.githubusercontent.com/99819306/173791151-d4538780-d496-4b7d-90f2-af8453fd713f.jpg" alt="drawing" style="width:800px;"/>
   
 - **after that I started making the frozen glass panel**  
 I cut a square piece of acrylic glass sheet, then I covered it with matte wrapping film on one side, and diffuser plastic sheets on the other side. which gave it a nor-reflective surface, and made it difuse the light emitted from the LEDs as well.
 
+<img src="https://user-images.githubusercontent.com/99819306/173812850-c146d54b-b286-4168-acb6-b1d35db60910.jpg" alt="drawing" style="width:800px;"/>
 
+- **Last step was to create a box that will hold all of the pieces together**  
+so I made a box out of MDF, which I discovered later that it wasn't the best choice due to it's heavy weight :(  
+I then carved some grooves on the four sides to hold the glass panel
 
-I started by making the outer box using MDF, which I discovered later that it wasn't the best choice due to it's heavy weight (about 5kg).
+<img src="https://user-images.githubusercontent.com/99819306/173815291-23762d88-18c9-43fe-ab99-a729f5938302.jpg" alt="drawing" style="width:800px;"/>
 
-later I covered the mdf with white
+**NOTE**: I covered the mdf with white film  later as a finish.
 
+## Circuit Connection
 
+**components:**
+1. Arduino UNO
+2. ws2812b LED strip
+3. IR receiver
+4. IR remote (I uesd old remote I had for another LED strip)
+5. 5V Powersupply (whatts depends on how long the strip is)
+6. Bunch of jumper wires
 
-
-
-
-
-
-
-
-
-
-
-
-
-### Circuit Connection
-
-
-
+<img src="https://user-images.githubusercontent.com/99819306/173817209-2a2eba9d-0c82-4646-bf78-7cbdf2d2f03f.jpg" alt="drawing" style="width:800px;"/>
 
 
 
@@ -60,11 +56,7 @@ later I covered the mdf with white
 
 
 
-
-
-
-
-### Coding
+## Coding
 
 
 
@@ -72,4 +64,4 @@ later I covered the mdf with white
 
 
 
-### The Final Product
+## The Final Product
